@@ -72,7 +72,25 @@
 
 					<div class="shadow_main"
 						style="background-color: white; border-radius: 15px; color: black; width: 30%; min-height: 96vh;">
-						<p>Ляв панел</p>
+
+						<div style="height: 40vh;">
+							<canvas data-chart="pie">
+								<!--
+  {
+    "data": {
+      "labels": ["Forests", "Oceans", "Deserts", "Other"],
+      "datasets": [{
+        "data": [30, 40, 20, 10],
+        "backgroundColor": ["#2ecc71", "#3498db", "#e67e22", "#9b59b6"]
+      }]
+    },
+    "options": {
+      "animation": { "duration": 1000 }
+    }
+  }
+  -->
+							</canvas>
+						</div>
 					</div>
 
 					<div class="shadow_main"
@@ -82,6 +100,18 @@
 
 				</div>
 			</section>
+			<section data-loop-start="39.600" data-loop-end="43.850" data-no-loop></section>
+			<section data-loop-start="44.100" data-loop-end="70">USA: SECTOR 2</section>
+			<section data-loop-start="70" data-loop-end="74" data-no-loop></section>
+			<section data-loop-start="74" data-loop-end="98.800">USA: SECTOR 3</section>
+			<section data-loop-start="98.800" data-loop-end="105" data-no-loop></section>
+			<section data-loop-start="105" data-loop-end="111.900">CANADA BORDERS</section>
+			<section data-loop-start="111.900" data-loop-end="115" data-no-loop></section>
+			<section data-loop-start="115" data-loop-end="149">CANADA: SECTOR 1</section>
+			<section data-loop-start="149" data-loop-end="152.390" data-no-loop></section>
+			<section data-loop-start="152.390" data-loop-end="175.550">CANADA: SECTOR 2</section>
+			<section data-loop-start="175.650" data-loop-end="180" data-no-loop></section>
+			<section data-loop-start="180" data-loop-end="207">CANADA: SECTOR 3</section>
 		</div>
 	</div>
 
@@ -89,18 +119,21 @@
 	<script src="dist/plugin/notes.js"></script>
 	<script src="dist/plugin/markdown.js"></script>
 	<script src="dist/plugin/highlight.js"></script>
+	<script src="node_modules/chart.js/dist/chart.umd.js"></script>
+	<script src="reveal.js-plugins/chart/plugin.js"></script>
 	<script>
 		const video = document.getElementById('bg-video');
 
 		function applySlide(slide) {
-			video.ontimeupdate = null; // clear previous handler
+			video.ontimeupdate = null;
+			video.onended = null; // <-- clear this too
 
 			const start = parseFloat(slide.dataset.loopStart);
 			const end = parseFloat(slide.dataset.loopEnd);
 			const noLoop = slide.dataset.noLoop !== undefined;
 
 			video.currentTime = start;
-			video.play(); // always resume
+			video.play();
 
 			video.ontimeupdate = () => {
 				if (video.currentTime >= end) {
@@ -112,6 +145,14 @@
 					}
 				}
 			};
+
+			// handles the case where the video file itself ends
+			video.onended = () => {
+				if (!noLoop) {
+					video.currentTime = start;
+					video.play();
+				}
+			};
 		}
 
 		Reveal.initialize({
@@ -119,7 +160,8 @@
 			height: "100%",
 			margin: 0,
 			minScale: 1,
-			maxScale: 1
+			maxScale: 1,
+			plugins: [RevealChart, RevealNotes, RevealMarkdown, RevealHighlight]
 		}).then(() => {
 			Reveal.on('slidechanged', event => applySlide(event.currentSlide));
 
