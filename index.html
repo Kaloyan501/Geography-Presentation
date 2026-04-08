@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>reveal.js</title>
+	<link rel="stylesheet" href="dist/reset.css" />
+	<link rel="stylesheet" href="dist/reveal.css" />
+	<link rel="stylesheet" href="dist/theme/black.css" />
+	<link rel="stylesheet" href="dist/plugin/highlight/monokai.css" />
+	<link rel="stylesheet" href="shadow_main.css" />
+	<style>
+		#bg-video {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			z-index: 0;
+		}
+
+		.reveal {
+			z-index: 1;
+		}
+
+		.reveal .slides section {
+			top: 0 !important;
+			height: 100%;
+			padding: 0 !important;
+			/* <-- THIS fixes the offset */
+		}
+	</style>
+</head>
+
+<body>
+
+	<video id="bg-video" src="render.mp4" autoplay muted playsinline></video>
+
+	<div class="reveal">
+		<div class="slides">
+			<section data-loop-start="0" data-loop-end="7.500">
+				<p
+					style="position: absolute; top: 0; left: 0; width: 100%; margin: 10vh 0vh 0vh 0vh; font-size: 2.5em;">
+					САЩ и Канада.
+				</p>
+				<p
+					style="position: absolute; bottom: 0; left: 0; width: 100%; margin: 0vh 0vh 10vh 0vh; font-size: 0.8em;">
+					Презентация от Калоян Донев, Пламен Петров и Стоян Ничев.
+				</p>
+			</section>
+			<section data-loop-start="7.500" data-loop-end="13.900" data-no-loop>
+				<div class="shadow_main" style="
+  					background-color: white;
+  					position: absolute;
+  					bottom: 0;
+  					left: 50%;
+  					transform: translateX(-50%);
+  					width: 70%;
+					margin-bottom: 2.5vh;
+					border-radius: 15px;
+					color: black;
+				">
+					<p>САЩ граничи с Канада на север и с Мексико на юг.</p>
+				</div>
+			</section>
+			<section data-loop-start="13.900" data-loop-end="16.00" data-no-loop></section>
+			<section data-loop-start="16.00" data-loop-end="39.700">
+				<div
+					style="position: absolute; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-between; padding: 0 2.5vh 2.5vh 2.5vh; box-sizing: border-box; gap: 2.5vh;">
+
+					<div class="shadow_main"
+						style="background-color: white; border-radius: 15px; color: black; width: 30%; min-height: 96vh;">
+						<p>Ляв панел</p>
+					</div>
+
+					<div class="shadow_main"
+						style="background-color: white; border-radius: 15px; color: black; width: 30%; min-height: 96vh;">
+						<p>Десен панел</p>
+					</div>
+
+				</div>
+			</section>
+		</div>
+	</div>
+
+	<script src="dist/reveal.js"></script>
+	<script src="dist/plugin/notes.js"></script>
+	<script src="dist/plugin/markdown.js"></script>
+	<script src="dist/plugin/highlight.js"></script>
+	<script>
+		const video = document.getElementById('bg-video');
+
+		function applySlide(slide) {
+			video.ontimeupdate = null; // clear previous handler
+
+			const start = parseFloat(slide.dataset.loopStart);
+			const end = parseFloat(slide.dataset.loopEnd);
+			const noLoop = slide.dataset.noLoop !== undefined;
+
+			video.currentTime = start;
+			video.play(); // always resume
+
+			video.ontimeupdate = () => {
+				if (video.currentTime >= end) {
+					if (noLoop) {
+						video.pause();
+						video.ontimeupdate = null;
+					} else {
+						video.currentTime = start;
+					}
+				}
+			};
+		}
+
+		Reveal.initialize({
+			width: "100%",
+			height: "100%",
+			margin: 0,
+			minScale: 1,
+			maxScale: 1
+		}).then(() => {
+			Reveal.on('slidechanged', event => applySlide(event.currentSlide));
+
+			const startOnReady = () => applySlide(Reveal.getCurrentSlide());
+			if (video.readyState >= 1) {
+				startOnReady();
+			} else {
+				video.addEventListener('loadedmetadata', startOnReady);
+			}
+		});
+	</script>
+
+</body>
+
+</html>
