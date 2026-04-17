@@ -74,6 +74,8 @@
 		"build:es5": "npm run build && node scripts/build-es5.js",
 		"build:styles": "vite build -c vite.config.styles.ts",
 		"build": "tsc && vite build && vite build -c vite.config.styles.ts && vite build -c plugin/highlight/vite.config.ts && vite build -c plugin/markdown/vite.config.ts && vite build -c plugin/math/vite.config.ts && vite build -c plugin/notes/vite.config.ts && vite build -c plugin/search/vite.config.ts && vite build -c plugin/zoom/vite.config.ts && node scripts/add-banner.js dist/reveal.js",
+		"build:single": "vite build --config vite.single.config.js",
+		"build:monolith": "vite build --config vite.monolith.config.js",
 		"package": "node scripts/zip.js",
 		"test": "node scripts/test.js",
 		"react:build": "npm run --prefix react build",
@@ -113,7 +115,9 @@
 		"sass": "^1.98.0",
 		"typescript": "^6.0.2",
 		"vite": "^8.0.3",
-		"vite-plugin-dts": "^4.5.4"
+		"vite-plugin-dts": "^4.5.4",
+		"vite-plugin-singlefile": "^2.3.2",
+		"vite-plugin-static-copy": "^4.0.1"
 	},
 	"overrides": {
 		"@microsoft/api-extractor": {
